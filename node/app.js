@@ -16,7 +16,8 @@ const
   crypto = require('crypto'),
   express = require('express'),
   https = require('https'),  
-  request = require('request');
+  request = require('request'),
+  db= require('./db');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -141,6 +142,22 @@ app.get('/authorize', function(req, res) {
     redirectURISuccess: redirectURISuccess
   });
 });
+
+
+function getReply(keyword, lang, callback) {
+        db.query('SELECT * FROM messages WHERE lang = ? AND keyword like ? LIMIT 1', [lang, '%'+keyword+'%'], function (err, rows) {
+            if (err) return callback(err, null)
+            return callback(null, rows)
+          })
+}
+
+function getRecipient(recipientId, callback) {
+        db.query('SELECT * FROM users WHERE recipientId = ? LIMIT 1', recipientId, function (err, rows) {
+            if (err) return callback(err, null)
+            return callback(null, rows)
+          })
+}
+
 
 /*
  * Verify that the callback came from Facebook. Using the App Secret from 
@@ -519,17 +536,46 @@ function sendFileMessage(recipientId) {
  *
  */
 function sendTextMessage(recipientId, messageText) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: messageText,
-      metadata: "DEVELOPER_DEFINED_METADATA"
-    }
-  };
+var reply = messageText;
+var lang = 'en_US';
 
-  callSendAPI(messageData);
+	getRecipient(recipientId, function(err,user){
+		if(err) {
+			reply = 'Error';
+		} else {
+			if(user.length) {
+	        	lang = user[0].lang;
+	        	getReply(messageText, lang, function(err, data){
+		        if(err) {
+		                reply = 'Error';
+		        } else {
+		            if(data.length) {
+		            reply = data[0].reply;
+		            } else {
+		            reply = messageText;
+		            }
+		        }
+
+		        var messageData = {
+				    recipient: {
+				      id: recipientId
+				    },
+				    message: {
+				      text: reply,
+				      metadata: "DEVELOPER_DEFINED_METADATA"
+				    }
+				  };
+
+				  callSendAPI(messageData);
+
+		        });
+	        } else {
+	        	reply = messageText;
+	        }
+
+		}
+
+	});
 }
 
 /*
