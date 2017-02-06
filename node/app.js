@@ -652,18 +652,18 @@ function sendGenericMessage(recipientId) {
               payload: "help",
             }],
           }, {
-            title: "touch",
-            subtitle: "Your Hands, Now in VR",
-            item_url: "https://www.oculus.com/en-us/touch/",
-            image_url: SERVER_URL + "/assets/touch.png",
+            title: "WordPress",
+            subtitle: "Meet WordPress",
+            item_url: "https://www.wordpress.org/",
+            image_url: "https://s.w.org/images/home/screen-themes.png?1",
             buttons: [{
               type: "web_url",
-              url: "https://www.oculus.com/en-us/touch/",
-              title: "Open Web URL"
+              url: "https://make.wordpress.org/",
+              title: "Make WordPress"
             }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for second bubble",
+              type: "web_url",
+              url: "https://make.wordpress.org/polyglots/",
+              title: "Localize WordPress"
             }]
           }]
         }
