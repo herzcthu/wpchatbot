@@ -383,6 +383,17 @@ function receivedPostback(event) {
   // button for Structured Messages.
   var payload = event.postback.payload;
 
+  switch(payload) {
+    case 'help':
+      sendHelp(senderID);
+      break;
+    case 'generic':
+      sendGenericMessage(senderID);
+      break;
+    default:
+      sendGenericMessage(senderID);
+  }
+
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
@@ -850,6 +861,20 @@ function sendAccountLinking(recipientId) {
   };
 
   callSendAPI(messageData);
+}
+
+function sendHelp(recipientId) {
+  var messageData = {
+              recipient: {
+                id: recipientId
+              },
+              message: {
+                text: 'Help',
+                metadata: "DEVELOPER_DEFINED_METADATA"
+              }
+            };
+
+          callSendAPI(messageData);
 }
 
 /*
