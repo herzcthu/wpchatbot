@@ -353,7 +353,7 @@ function receivedPostback(event) {
       break;
     case 'get_start':
       sendGenericMessage(senderID);
-      sendAccountLinking(senderID);
+      //sendAccountLinking(senderID);
       break;
     default:
       sendGenericMessage(senderID);
