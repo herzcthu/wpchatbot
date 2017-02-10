@@ -280,8 +280,36 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
+      case 'image':
+        sendImageMessage(senderID);
+        break;
+
+      case 'gif':
+        sendGifMessage(senderID);
+        break;
+
+      case 'audio':
+        sendAudioMessage(senderID);
+        break;
+
+      case 'video':
+        sendVideoMessage(senderID);
+        break;
+
+      case 'file':
+        sendFileMessage(senderID);
+        break;
+
+      case 'button':
+        sendButtonMessage(senderID);
+        break;
+
       case 'generic':
         sendGenericMessage(senderID);
+        break;
+
+      case 'receipt':
+        sendReceiptMessage(senderID);
         break;
 
       case 'quick reply':
@@ -290,6 +318,14 @@ function receivedMessage(event) {
 
       case 'read receipt':
         sendReadReceipt(senderID);
+        break;
+
+      case 'typing on':
+        sendTypingOn(senderID);
+        break;
+
+      case 'typing off':
+        sendTypingOff(senderID);
         break;
 
       case 'account linking':
@@ -346,17 +382,6 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback
   // button for Structured Messages.
   var payload = event.postback.payload;
-
-  switch(payload) {
-    case 'help':
-      sendHelp(senderID);
-      break;
-    case 'generic':
-      sendGenericMessage(senderID);
-      break;
-    default:
-      sendGenericMessage(senderID);
-  }
 
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
@@ -825,20 +850,6 @@ function sendAccountLinking(recipientId) {
   };
 
   callSendAPI(messageData);
-}
-
-function sendHelp(recipientId) {
-  var messageData = {
-              recipient: {
-                id: recipientId
-              },
-              message: {
-                text: 'Help',
-                metadata: "DEVELOPER_DEFINED_METADATA"
-              }
-            };
-
-          callSendAPI(messageData);
 }
 
 /*
