@@ -351,8 +351,9 @@ function receivedPostback(event) {
     case 'help':
       sendHelp(senderID);
       break;
-    case 'generic':
+    case 'get_start':
       sendGenericMessage(senderID);
+      sendAccountLinking(senderID);
       break;
     default:
       sendGenericMessage(senderID);
@@ -360,10 +361,6 @@ function receivedPostback(event) {
 
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
-
-  // When a postback is called, we'll send a message back to the sender to
-  // let them know it was successful
-  sendTextMessage(senderID, "Postback called");
 }
 
 /*
@@ -829,16 +826,16 @@ function sendAccountLinking(recipientId) {
 
 function sendHelp(recipientId) {
   var messageData = {
-              recipient: {
-                id: recipientId
-              },
-              message: {
-                text: 'Help',
-                metadata: "DEVELOPER_DEFINED_METADATA"
-              }
-            };
+        recipient: {
+          id: recipientId
+        },
+        message: {
+          text: 'Help',
+          metadata: "DEVELOPER_DEFINED_METADATA"
+        }
+      };
 
-          callSendAPI(messageData);
+      callSendAPI(messageData);
 }
 
 /*
